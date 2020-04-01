@@ -1,52 +1,27 @@
 package it.polito.tdp.esempioSQL.model;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
+
+import it.polito.tdp.esempioSQL.db.BubsDAO;
 
 public class LeggiBabs {
 	
 	public void run() {
-		String jdbcURL = "jdbc:mysql://localhost/babs?user=root";
 		
-		try {
-			Connection conn = DriverManager.getConnection(jdbcURL);
-			
-			String  sql = "SELECT name FROM station WHERE landmark = ? ";
-			
-			PreparedStatement st = conn.prepareStatement(sql);
-			
-			st.setString(1, "Palo Alto");
-			ResultSet res = st.executeQuery();
-			
-			while(res.next()){
-				String nomeStazione =res.getString("name");
-				
-				System.out.println(nomeStazione);
-			}
-			
-			st.close();
-			
-			Statement st2 = conn.createStatement();
-			
-			
-			conn.close();
-			
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
+		BubsDAO dao = new BubsDAO();
+		
+		List <Station> tutte = dao.listStation();
+		
+		for (Station s : tutte) {
+			System.out.println(s.getName());
 		}
 		
-		//factory -> abbiamo creato una nuova classe senza sapere 
-		//il tipo della classe (NON posso usare new)
-		//uso un metodo fornito da un'altra classe che internamente
-		//farà new e conoscerà il tipo di classe effettivo
+		System.out.println("------");
+		List <Station> paloAlto = dao.listStationByLandmark("Palo Alto");
 		
-		
-		
+		for (Station s : paloAlto) {
+			System.out.println(s.getName());
+		}
 	}
 	
 	
